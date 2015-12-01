@@ -5,8 +5,7 @@
  * * * * * * * * * * * * * */
 
 function Blog() {
-    this.articles = [ ];
-    
+    this.articles = [ ];    
     this.sortArticlesByDate = function() { 
 	this.articles.sort( function( a, b ) { return b.publishedOn - a.publishedOn } );
     }
@@ -15,7 +14,6 @@ function Blog() {
 	for( var ii=0; ii < rawData.length; ii++ ) {
 	    this.articles.push( new Article( blogData[ii] ) );
 	}
-
 	this.sortArticlesByDate();
     }
 
