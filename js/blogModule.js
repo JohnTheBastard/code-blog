@@ -5,16 +5,22 @@
  * * * * * * * * * * * * * */
 
 function Blog() {
+    var byDate = function( a, b ) { return b.publishedOn - a.publishedOn };
+    var byDateReversed = function( a, b ) { return a.publishedOn - b.publishedOn };
+    var byAuthor = function(a, b) { return b.author - a.author };
+    var byAuthorReversed = function(a, b) { return a.author - b.author };
+    var byTitle = function(a, b)  { return b.title - a.title };
+    var byTitleReversed = function(a, b)  { return a.title - b.title };
+
     this.articles = [ ];    
-    this.sortArticlesByDate = function() { 
-	this.articles.sort( function( a, b ) { return b.publishedOn - a.publishedOn } );
-    }
+
     
     this.init = function( rawData ) {
 	for( var ii=0; ii < rawData.length; ii++ ) {
 	    this.articles.push( new Article( blogData[ii] ) );
 	}
-	this.sortArticlesByDate();
+	//this.sortArticlesByDate();
+	this.articles.sort(byDate);
     }
 
 };
