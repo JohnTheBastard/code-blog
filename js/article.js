@@ -4,17 +4,25 @@
  * CF301       Winter 2015 *
  * * * * * * * * * * * * * */
 
-function Article(properties) {
-    this.author = properties.author;
+function Article( properties ) {
     this.title = properties.title;
-    this.body = properties.body;
+    this.category = properties.category;
+    this.author = properties.author;
+    this.authorURL = properties.authorURL;
     this.publishedOn = properties.publishedOn;
-}
+    this.body = properties.body;
 
-Article.prototype.toHTML = function() {
-  // Here's the old way of templating.
-  // How does jQuery let you keep the HTML in the HTML?
-  //  return '<article>' +
-  //    '<h1>' + this.title +'</h1>' +
-  //    '</article>'
+    this.toHTML = function() {
+	var daysAgo = (new Date() - new Date(this.pubdate))/60/60/24/1000;
+	var $articleHTML = $( '.articleTemplate' ).clone();
+
+	$articleHTML.removeClass( 'articleTemplate' );
+	$articleHTML.find( 'h1:first ').html( this.title );
+	$articleHTML.find( 'time' ).html('exactly ' + parseInt( daysAgo )
+				       + ' days ago');
+	$articleHTML.find( '.article-body' ).html(this.body);
+	$articleHTML.append( '<hr>' );
+	return $articleHTML;
+    }
+
 }

@@ -2,6 +2,10 @@
   background-color: white;
 }
 
+.articleTemplate { display: none; }
+table,td { border: 1px solid black;
+	   border-collapse: collapse; }
+table { margin-left: 10px; }
 
 h1 {
 
