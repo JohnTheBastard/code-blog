@@ -7,20 +7,9 @@
 function Blog() {
     this.articles = [ ];
     
-    this.sortArticlesByDate = function() {
-	// This is a pretty lazy compare function but our Article object is 
-	// using a pretty lazy date format (which should probably be an object
-	// itself rather than a string).
-	var compareDates = function( a, b ) {
-	    if ( a.publishedOn < b.publishedOn )
-		return -1;
-	    if ( a.publishedOn > b.publishedOn )
-		return 1;
-	    return 0;
-	}
-	this.articles.sort( compareDates );
+    this.sortArticlesByDate = function() { 
+	this.articles.sort( function( a, b ) { return b.publishedOn - a.publishedOn } );
     }
-
     
     this.init = function( rawData ) {
 	for( var ii=0; ii < rawData.length; ii++ ) {
