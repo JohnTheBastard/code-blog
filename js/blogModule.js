@@ -22,6 +22,7 @@ function Blog() {
     }
 
     this.articles = [ ];
+    this.articlesToPublish = [ ];
     this.authors = [ ];
     this.categories = [ ];
     this.dates = [ ];
@@ -38,7 +39,7 @@ function Blog() {
 	    }
 
 	}
-	//this.sortArticlesByDate();
+
 	this.articles.sort(byDate);
 	for( var ii=0; ii < this.articles.length; ii++ ) {
 	    this.dates.push( this.articles[ii].publishedOn );
@@ -46,6 +47,8 @@ function Blog() {
 	this.authors.sort();
 	this.categories.sort();
 
+	this.articlesToPublish = this.articles;
+	
 	var $authors = $('#authors ul');
 	var $categories = $('#categories ul');
 	var $dates = $('#dates ul');
@@ -57,7 +60,24 @@ function Blog() {
 	for( var ii=0; ii < this.categories.length; ii++ ) {
 	    $categories.append('<li><span class="category">' + this.categories[ii] + '</span></li>' );
 	}
+    }
 
+    this.sortBy = function( sortMethod ) {
+	if( sortMethod == "authAsc" ) {
+	    this.articlesToPublish.sort(byAuthor);
+	    console.log(1);
+	} else if( sortMethod == "authDesc" ) {
+	    this.articlesToPublish.sort(byAuthorReversed);
+	    console.log(2);
+	} else if( sortMethod == "dateAsc" ) {
+	    this.articlesToPublish.sort(byDate);
+	    console.log(3);
+	} else if( sortMethod == "dateDesc" ) {
+	    this.articlesToPublish.sort(byDate);
+	    console.log(4);
+	} else {
+	    console.log("Error: unable to sort on " + sortMethod );
+	}
     }
 
 };
@@ -69,10 +89,13 @@ var BLOG_MODULE = (function() {
 
     my.blog.init( blogData );
 
-    for( var ii=0; ii < my.blog.articles.length; ii++ ) {
-	my.$anchor.append( my.blog.articles[ii].toHTML() );
+    my.publish = function() {
+	$('.articleTemplate').nextAll().remove();
+	for( var ii=0; ii < my.blog.articlesToPublish.length; ii++ ) {
+	    my.$anchor.append( my.blog.articlesToPublish[ii].toHTML() );
+	}
     }
-
+    my.publish();
 
     my.eventListeners = function() {
 	var menuItem = '';
@@ -86,12 +109,14 @@ var BLOG_MODULE = (function() {
 	    itemClass = $(this).children().attr('class');
 	    console.log(menuItem + " " + itemClass);
 	    my.blog.filterBy(menuItem, itemClass);
+	    my.publish();
 	});
 
 	$sortButtons.on('click', function() {
 	    button = $(this).attr('id');
 	    console.log(button);
 	    my.blog.sortBy(button);
+	    my.publish();
 	});
     }			
     my.eventListeners();
