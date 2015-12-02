@@ -13,35 +13,29 @@
     <nav id="navBar">
     <h1>Jo Mama's Yule Blog</h1>
       <ul>
-	<li class="sub"><a href="index.html"><i class="fa fa-home fa-lg"></i> Home</a> <aside></aside>
+	<li class="sub" id="homeNav"><a href="index.html"><i class="fa fa-home fa-lg"></i> Home</a> <aside></aside>
           <ul>
             <li><a href="#">about</a></li>
             <li><a href="#">contact</a></li>
           </ul>
 	</li>
-	<li class="sub"><a href="#"><i class="fa fa-edit fa-lg"></i> Blog</a> <aside></aside> 
+	<li class="sub" id="blogNav"><a href="#"><i class="fa fa-edit fa-lg"></i> Blog</a> <aside></aside> 
           <ul>
-	    <li class="sub"><a href="#">categories</a>
+	    <li class="sub" id="categories"><span>category</span>
               <ul>
-                <li><a href="#">cat-fun</a></li>
-                <li><a href="#">cat-laaaaaaaaaaame</a></li>
               </ul>
 	    </li>
-	    <li class="sub"><a href="#">author</a>
+	    <li class="sub" id="authors"><span>author</span>
               <ul>
-                <li><a href="#">aut-fun</a></li>
-                <li><a href="#">aut-laaaaaaaaaaame</a></li>
               </ul>
 	    </li>
-	    <li class="sub"><a href="#">date</a>
+	    <li class="sub" id="dates"><span>year</span>
               <ul>
-                <li><a href="#">date-fun</a></li>
-                <li><a href="#">date-laaaaaaaaaaame</a></li>
               </ul>
 	    </li>
 	  </ul>
 	</li>
-        <li class="sub"><a href="#"><i class="fa fa-users fa-fw"></i> Social Networks</a> <aside></aside>
+        <li class="sub" id="socialNav"><a href="#"><i class="fa fa-users fa-fw"></i> Social Networks</a> <aside></aside>
           <ul>
 	    <li><a href="#">
 	    <i class="fa fa-twitter fa-fw"></i> twitter</a></li>
@@ -57,18 +51,18 @@
       
   <section id="articles">
   <div class="btn-group">
-    <a class="btn btn-default" href="#" title="sort by author: ascending">
+    <span id="authAsc" class="btn btn-default" title="sort by author: ascending">
       <i class="fa fa-sort-alpha-asc"></i>
-    </a>
-    <a class="btn btn-default" href="#" title="sort by author:descending">
+    </span>
+    <span id="authDesc" class="btn btn-default" title="sort by author:descending">
       <i class="fa fa-sort-alpha-desc"></i>
-    </a>
-    <a class="btn btn-default" href="#" title="sort by date: ascending">
+    </span>
+    <span id="dateAsc" class="btn btn-default" title="sort by date: ascending">
       <i class="fa fa-sort-numeric-asc"></i>
-    </a>
-    <a class="btn btn-default" href="#" title="sort by date: descending">
+    </span>
+    <span id="dateDesc" class="btn btn-default" title="sort by date: descending">
       <i class="fa fa-sort-numeric-desc"></i>
-    </a>
+    </span>
   </div>    
     <div class="articleTemplate">
       <article>
