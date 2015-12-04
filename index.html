@@ -2,31 +2,82 @@
 <html>
 <head>
   <title>Yule Blog</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="css/blog.css">
   <meta charset="utf-8"></meta>
 </head>
 
 
 <body>
-  <header><h1>Jo Mama's Yule Blog</h1>
-      <nav>
+  <header>
+    <nav id="navBar">
+    <h1>Jo Mama's Yule Blog</h1>
+      <ul>
+	<li class="sub" id="homeNav"><a href="index.html"><i class="fa fa-home fa-lg"></i> Home</a> <aside></aside>
+          <ul>
+            <li><a href="#">about</a></li>
+            <li><a href="#">contact</a></li>
+          </ul>
+	</li>
+	<li class="sub" id="blogNav"><a href="#"><i class="fa fa-edit fa-lg"></i> Blog</a> <aside></aside> 
+	  <ul>
+	    <li id="resetToAllArticles"><span>all</span></li>
+	    <li class="sub" id="authors"><span>author</span>
+              <ul>
+              </ul>
+	    </li>
+	    <li class="sub" id="categories"><span>category</span>
+              <ul>
+              </ul>
+	    </li>
+	    <li class="sub" id="dates"><span>year</span>
+              <ul>
+              </ul>
+	    </li>
+	  </ul>
+	</li>
+        <li class="sub" id="socialNav"><a href="#"><i class="fa fa-users fa-fw"></i> Social Networks</a> <aside></aside>
+          <ul>
+	    <li><a href="#">
+	    <i class="fa fa-twitter fa-fw"></i> twitter</a></li>
+	    <li><a href="#">
+	    <i class="fa fa-github fa-fw"></i> github</a></li>
+          </ul>
+      </ul>
 
-        <aside></aside>
-      </nav>
-</header>
-<p id="pLog">
+    </nav>
+  </header>
+
+      <br /><br /><br />
+      
   <section id="articles">
-    <article class="articleTemplate">
-      <header>
-        <h1>Title</h1>
-        <div class="byline">
-          published <time pubdate datetime="1970-01-01">Publish Time</time>
-        </div>
-      </header>
-      <section class="article-body">Body</section>
-    </article>
+  <div class="btn-group">
+    <span id="authAsc" class="btn btn-default" title="sort by author: ascending">
+      <i class="fa fa-sort-alpha-asc"></i>
+    </span>
+    <span id="authDesc" class="btn btn-default" title="sort by author:descending">
+      <i class="fa fa-sort-alpha-desc"></i>
+    </span>
+    <span id="dateAsc" class="btn btn-default" title="sort by date: ascending">
+      <i class="fa fa-sort-numeric-asc"></i>
+    </span>
+    <span id="dateDesc" class="btn btn-default" title="sort by date: descending">
+      <i class="fa fa-sort-numeric-desc"></i>
+    </span>
+  </div>    
+    <div class="articleTemplate">
+      <article>
+        <header>
+          <h1>Title</h1>
+          <div class="byline">
+            published <time pubdate datetime="1970-01-01">Publish Time</time>
+          </div>
+        </header>
+        <section class="article-body">Body</section>
+      </article>
+      <hr>
+    </div>
   </section>
-</p>
 
 <footer>
 <p>&copy; 2015 <code><a href="http://twitter.com/JohnTheBastard">@JohnTheBastard</a></code></p>
