@@ -107,11 +107,8 @@ function Blog() {
 	} else {
 	    console.log("Error: unable to sort on " + sortMethod );
 	}
-	
-	for ( var ii=0; ii < this.articlesToPublish.length; ii++ ) {
-	    tempAuthors.push(this.articlesToPublish[ii].author);
-	}
 
+	/*
 	if(debug) {
 	    var tempAuthors = [];
 	    for ( var ii=0; ii < this.articlesToPublish.length; ii++ ) {
@@ -119,9 +116,19 @@ function Blog() {
 	    }
 	    console.log(tempAuthors);
 	}
-	
+	*/
     }
 
+    this.filterBy = function( filter, attribute ) {
+	this.articlesToPublish = [ ];
+	for( var ii=0; ii < this.articles.length; ii++ ) {
+	    if( ( attribute == "author" && filter == this.articles[ii].author ) ||
+		( attribute == "category" && filter == this.articles[ii].category ) ) {
+		this.articlesToPublish.push( this.articles[ii] );
+	    }
+	}
+    }
+    
 };
 
 var BLOG_MODULE = (function() {
@@ -150,7 +157,7 @@ var BLOG_MODULE = (function() {
 	    menuItem = $(this).text();
 	    itemClass = $(this).children().attr('class');
 	    console.log(menuItem + " " + itemClass);
-	    //my.blog.filterBy(menuItem, itemClass);
+	    my.blog.filterBy(menuItem, itemClass);
 	    my.publish();
 	});
 
