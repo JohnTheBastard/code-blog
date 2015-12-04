@@ -147,22 +147,25 @@ var BLOG_MODULE = (function() {
     my.publish();
 
     my.eventListeners = function() {
-	var menuItem = '';
-	var itemClass = '';
-	var $filters = $('#blogNav > ul > li > ul > li');
-	var button = '';
-	var $sortButtons = $('.btn-group > span');
+	var $resetPublishedArticles = $( '#resetToAllArticles' );
+	var $filters = $( '#blogNav > ul > li > ul > li' );
+	var $sortButtons = $( '.btn-group > span' );
+
+
+	$resetPublishedArticles.on('click', function() {
+	    my.blog.articlesToPublish = my.blog.articles;
+	    my.publish();
+	});
 	
 	$filters.on('click', function() {
-	    menuItem = $(this).text();
-	    itemClass = $(this).children().attr('class');
-	    console.log(menuItem + " " + itemClass);
+	    var menuItem = $(this).text();
+	    var itemClass = $(this).children().attr('class');
 	    my.blog.filterBy(menuItem, itemClass);
 	    my.publish();
 	});
 
 	$sortButtons.on('click', function() {
-	    button = $(this).attr('id');
+	    var button = $(this).attr('id');
 	    console.log(button);
 	    my.blog.sortBy(button);
 	    my.publish();
