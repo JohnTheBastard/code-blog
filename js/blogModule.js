@@ -4,13 +4,44 @@
  * CF301       Winter 2015 *
  * * * * * * * * * * * * * */
 
+var debug = false;
+
 function Blog() {
+    
+    var alphabetical = function(a, b) {
+	var A = a.toLowerCase();
+	var B = b.toLowerCase();
+	if(A < B) {
+	    //console.log( A + " < " + B  + " => -1" );
+            return -1;
+	} else if (A > B) {
+	    //console.log( A + " > " + B  + " => 1" );
+	    return  1;
+	} else {
+	    return 0;
+	}
+    };
+    
+    var alphabeticalReversed = function(a, b) {
+	var A = a.toLowerCase();
+	var B = b.toLowerCase();
+	if(A > B) {
+	    //console.log( A + " > " + B  + " => -1" );
+            return -1;
+	} else if(A < B) {
+	    //console.log( A + " < " + B  + " => 1" );
+	    return  1;
+	} else {
+	    return 0;
+	}
+    };
+    
     var byDate = function( a, b ) { return b.publishedOn - a.publishedOn };
     var byDateReversed = function( a, b ) { return a.publishedOn - b.publishedOn };
-    var byAuthor = function(a, b) { return b.author - a.author };
-    var byAuthorReversed = function(a, b) { return a.author - b.author };
-    var byTitle = function(a, b)  { return b.title - a.title };
-    var byTitleReversed = function(a, b)  { return a.title - b.title };
+    var byAuthor = function(a, b) { return alphabetical( a.author, b.author ) };
+    var byAuthorReversed = function(a, b) { return alphabeticalReversed( a.author, b.author ) };
+    var byTitle = function(a, b)  { return alphabetical( a.title, b.title ) };
+    var byTitleReversed = function(a, b)  { return alphabeticalReversed( a.title, b.title ) };
 
     var cantFind = function( element, array ) {
 	for ( var ii=0; ii < array.length; ii++ ) {
@@ -63,21 +94,32 @@ function Blog() {
     }
 
     this.sortBy = function( sortMethod ) {
+
+	
 	if( sortMethod == "authAsc" ) {
 	    this.articlesToPublish.sort(byAuthor);
-	    console.log(1);
 	} else if( sortMethod == "authDesc" ) {
 	    this.articlesToPublish.sort(byAuthorReversed);
-	    console.log(2);
 	} else if( sortMethod == "dateAsc" ) {
 	    this.articlesToPublish.sort(byDate);
-	    console.log(3);
 	} else if( sortMethod == "dateDesc" ) {
-	    this.articlesToPublish.sort(byDate);
-	    console.log(4);
+	    this.articlesToPublish.sort(byDateReversed);
 	} else {
 	    console.log("Error: unable to sort on " + sortMethod );
 	}
+	
+	for ( var ii=0; ii < this.articlesToPublish.length; ii++ ) {
+	    tempAuthors.push(this.articlesToPublish[ii].author);
+	}
+
+	if(debug) {
+	    var tempAuthors = [];
+	    for ( var ii=0; ii < this.articlesToPublish.length; ii++ ) {
+		tempAuthors.push(this.articlesToPublish[ii].author);
+	    }
+	    console.log(tempAuthors);
+	}
+	
     }
 
 };
@@ -108,7 +150,7 @@ var BLOG_MODULE = (function() {
 	    menuItem = $(this).text();
 	    itemClass = $(this).children().attr('class');
 	    console.log(menuItem + " " + itemClass);
-	    my.blog.filterBy(menuItem, itemClass);
+	    //my.blog.filterBy(menuItem, itemClass);
 	    my.publish();
 	});
 
