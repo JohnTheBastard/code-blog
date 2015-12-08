@@ -18,7 +18,8 @@ function Article( properties ) {
     this.category = properties.category;
     this.author = properties.author;
     this.authorURL = properties.authorURL;
-    this.publishedOn = parseCrappyDate( properties.publishedOn );
+    //    this.publishedOn = parseCrappyDate( properties.publishedOn );
+    this.publishedOn = new Date(properties.publishedOn);
     this.body = properties.body;
 
     this.toHTML = function() {

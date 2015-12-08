@@ -51,59 +51,67 @@ function Blog() {
 	}
 	return true;
     }
-
+    
+    
     this.articles = [ ];
     this.articlesToPublish = [ ];
     this.authors = [ ];
     this.categories = [ ];
     this.dates = [ ];
+    var self = this;
     
-    this.init = function( rawData ) {
-	for( var ii=0; ii < rawData.length; ii++ ) {
-	    this.articles.push( new Article( blogData[ii] ) );
-
-	    if ( cantFind( blogData[ii].author, this.authors ) ) {
-		this.authors.push( blogData[ii].author );
+    this.init = function() {
+	function processJSON( jsonData ) {
+	    for( var ii=0; ii < jsonData.articles.length; ii++ ) {
+		self.articles.push( new Article( jsonData.articles[ii] ) );
+		if ( cantFind( jsonData.articles[ii].author, self.authors ) ) {
+		    self.authors.push( jsonData.articles[ii].author );
+		}
+		if ( cantFind( jsonData.articles[ii].category, self.categories ) ) {
+		    self.categories.push( jsonData.articles[ii].category );
+		}
 	    }
-	    if ( cantFind( blogData[ii].category, this.categories ) ) {
-		this.categories.push( blogData[ii].category );
-	    }
-
 	}
-
-	this.articles.sort(byDate);
-	for( var ii=0; ii < this.articles.length; ii++ ) {
-	    this.dates.push( this.articles[ii].publishedOn );
+	var blogDataURL = "http://johnthebastard.github.io/code-blog-json/blogArticles.json";
+	var $blogData = $.ajax( { type: "GET",
+				  url: blogDataURL,
+				  async: false,
+				  dataType: "json"
+				} );
+	
+	$blogData.done( processJSON );
+	
+	self.articles.sort(byDate);
+	for( var ii=0; ii < self.articles.length; ii++ ) {
+	    self.dates.push( self.articles[ii].publishedOn );
 	}
-	this.authors.sort();
-	this.categories.sort();
-
-	this.articlesToPublish = this.articles;
+	self.authors.sort();
+	self.categories.sort();
+	self.articlesToPublish = self.articles;
 	
 	var $authors = $('#authors ul');
 	var $categories = $('#categories ul');
 	var $dates = $('#dates ul');
-
-
-	for( var ii=0; ii < this.authors.length; ii++ ) {
-	    $authors.append('<li><span class="author">' + this.authors[ii] + '</span></li>' );
+	    
+	for( var ii=0; ii < self.authors.length; ii++ ) {
+	    $authors.append('<li><span class="author">' + self.authors[ii] + '</span></li>' );
 	}
-	for( var ii=0; ii < this.categories.length; ii++ ) {
-	    $categories.append('<li><span class="category">' + this.categories[ii] + '</span></li>' );
+	for( var ii=0; ii < self.categories.length; ii++ ) {
+	    $categories.append('<li><span class="category">' + self.categories[ii] + '</span></li>' );
 	}
     }
-
-    this.sortBy = function( sortMethod ) {
-
-	
+    
+    
+    
+    self.sortBy = function( sortMethod ) {
 	if( sortMethod == "authAsc" ) {
-	    this.articlesToPublish.sort(byAuthor);
+	    self.articlesToPublish.sort(byAuthor);
 	} else if( sortMethod == "authDesc" ) {
-	    this.articlesToPublish.sort(byAuthorReversed);
+	    self.articlesToPublish.sort(byAuthorReversed);
 	} else if( sortMethod == "dateAsc" ) {
-	    this.articlesToPublish.sort(byDate);
+	    self.articlesToPublish.sort(byDate);
 	} else if( sortMethod == "dateDesc" ) {
-	    this.articlesToPublish.sort(byDateReversed);
+	    self.articlesToPublish.sort(byDateReversed);
 	} else {
 	    console.log("Error: unable to sort on " + sortMethod );
 	}
@@ -119,12 +127,12 @@ function Blog() {
 	*/
     }
 
-    this.filterBy = function( filter, attribute ) {
-	this.articlesToPublish = [ ];
-	for( var ii=0; ii < this.articles.length; ii++ ) {
-	    if( ( attribute == "author" && filter == this.articles[ii].author ) ||
-		( attribute == "category" && filter == this.articles[ii].category ) ) {
-		this.articlesToPublish.push( this.articles[ii] );
+    self.filterBy = function( filter, attribute ) {
+	self.articlesToPublish = [ ];
+	for( var ii=0; ii < self.articles.length; ii++ ) {
+	    if( ( attribute == "author" && filter == self.articles[ii].author ) ||
+		( attribute == "category" && filter == self.articles[ii].category ) ) {
+		self.articlesToPublish.push( self.articles[ii] );
 	    }
 	}
     }
@@ -136,7 +144,7 @@ var BLOG_MODULE = (function() {
     my.$anchor = $( "#articles" );
     my.blog = new Blog();
 
-    my.blog.init( blogData );
+    my.blog.init();
 
     my.publish = function() {
 	$('.articleTemplate').nextAll().remove();
@@ -146,6 +154,8 @@ var BLOG_MODULE = (function() {
     }
     my.publish();
 
+    //console.log(JSON.stringify(my.blog.articles));
+    
     my.eventListeners = function() {
 	var $resetPublishedArticles = $( '#resetToAllArticles' );
 	var $filters = $( '#blogNav > ul > li > ul > li' );
