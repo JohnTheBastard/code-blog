@@ -52,7 +52,6 @@ function Blog() {
 	return true;
     }
     
-    
     this.articles = [ ];
     this.articlesToPublish = [ ];
     this.authors = [ ];
