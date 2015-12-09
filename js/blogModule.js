@@ -57,20 +57,21 @@ function Blog() {
     var self = this;
     
     this.init = function() {
-	var blogDataURL = "http://johnthebastard.github.io/code-blog-json/blogArticles.json";
-	//var localETag = localStorage.getItem('ETag');
-	var localETag = 1;
-	var getRemoteETag = function() {
-	    return $.ajax({ type: 'HEAD',
-			    url: blogDataURL,
+	//var blogDataURL = "http://johnthebastard.github.io/code-blog-json/blogArticles.json";
+	var blogDataURL = "js/blogArticles.json";
+	var localETag = localStorage.getItem('ETag');
+
+	function getETag(url) {
+	    var ETag = "";
+	    $.ajax({ type: 'HEAD',
+			    url: url,
 			    async: false,
 			    success: function(data, textStatus,xhr) {
-				self.ETag = xhr.getResponseHeader("ETag");
+				ETag = xhr.getResponseHeader("ETag");
 			    }
 			  } );
-	}
-
-	getRemoteETag();
+	    return ETag;
+	}; 
 
 	function processJSON( jsonData, textStatus, xhr ) {
 	    //console.log(textStatus);
@@ -89,14 +90,12 @@ function Blog() {
 	        .sort();
 
 	    self.ETag = xhr.getResponseHeader('ETag');
-	    //console.log(self.ETag);
 	}
 
+	self.ETag = getETag(blogDataURL);
 	
 	if( localETag === self.ETag ) {
-	//if(true) {
 	    // blog articles haven't changed, load local copy
-	    console.log("loading local data");
 	    self.articles = JSON.parse( localStorage.getItem( 'articles' ) ).map( castArticle );
 	    self.authors = JSON.parse( localStorage.getItem( 'authors' ) );
 	    self.categories = JSON.parse( localStorage.getItem('categories') );
@@ -109,8 +108,7 @@ function Blog() {
 		      contentType: 'application/json; charset=utf-8',
 		      success: processJSON
 		    } );
-
-	    localStorage.setItem( 'ETag', self.Etag );
+	    localStorage.setItem( 'ETag', self.ETag );
 	    localStorage.setItem( 'articles', JSON.stringify(self.articles) );
 	    localStorage.setItem( 'authors', JSON.stringify(self.authors));
 	    localStorage.setItem( 'categories', JSON.stringify(self.categories));	    
