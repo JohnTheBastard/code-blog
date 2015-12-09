@@ -5,20 +5,10 @@
  * * * * * * * * * * * * * */
 
 function Article( properties ) {
-    var parseCrappyDate = function(crappyDate) {
-	var year = crappyDate.substr(0, 4);
-	var month = crappyDate.substr(5, 2) ;
-	var day = crappyDate.substr(8, 2);
-	// I don't understand why we need to subtract 1 from
-	// the month, and not day, but Date works that way.
-	return new Date( year, month - 1 , day );
-    }
-    
     this.title = properties.title;
     this.category = properties.category;
     this.author = properties.author;
     this.authorURL = properties.authorURL;
-    //    this.publishedOn = parseCrappyDate( properties.publishedOn );
     this.publishedOn = new Date(properties.publishedOn);
     this.body = properties.body;
 
