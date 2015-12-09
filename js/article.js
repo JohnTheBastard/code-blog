@@ -11,6 +11,7 @@ function Article( properties ) {
     this.authorURL = properties.authorURL;
     this.publishedOn = new Date(properties.publishedOn);
     this.body = properties.body;
+    this.wordCount = properties.wordCount || 0;
 
     this.toHTML = function() {
 	var today = new Date();

@@ -56,7 +56,7 @@ function Blog() {
     this.ETag = "";
     var self = this;
     
-    this.init = function() {
+    self.init = function() {
 	//var blogDataURL = "http://johnthebastard.github.io/code-blog-json/blogArticles.json";
 	var blogDataURL = "js/blogArticles.json";
 	var localETag = localStorage.getItem('ETag');
@@ -71,7 +71,12 @@ function Blog() {
 			    }
 			  } );
 	    return ETag;
-	}; 
+	}
+
+	function determineWordCount( article ) {
+	    article.wordCount = $(article.body).text().match(/\S+/g).length;
+	    return article;
+	}
 
 	function processJSON( jsonData, textStatus, xhr ) {
 	    //console.log(textStatus);
@@ -79,6 +84,7 @@ function Blog() {
 	    
 	    // make Article objects out of the data and store in a sorted array
 	    self.articles = jsonData.articles.map( castArticle ).sort(byDate);
+	    self.articles = self.articles.map( determineWordCount );
 	    // store unique authors and categories in sorted arrays
 	    self.authors = self.articles
 		.map( function(article) { return article.author; } )
@@ -92,6 +98,7 @@ function Blog() {
 	    self.ETag = xhr.getResponseHeader('ETag');
 	}
 
+	
 	self.ETag = getETag(blogDataURL);
 	
 	if( localETag === self.ETag ) {
@@ -108,10 +115,10 @@ function Blog() {
 		      contentType: 'application/json; charset=utf-8',
 		      success: processJSON
 		    } );
-	    localStorage.setItem( 'ETag', self.ETag );
 	    localStorage.setItem( 'articles', JSON.stringify(self.articles) );
 	    localStorage.setItem( 'authors', JSON.stringify(self.authors));
-	    localStorage.setItem( 'categories', JSON.stringify(self.categories));	    
+	    localStorage.setItem( 'categories', JSON.stringify(self.categories));
+	    localStorage.setItem( 'ETag', self.ETag );
 	}
 	
 	self.articlesToPublish = self.articles;
@@ -148,6 +155,44 @@ function Blog() {
 
     self.filterBy = function( selector, attribute ) {
 	self.articlesToPublish = self.articles.filter( function(article) { return selector == article[attribute]; });
+    }
+
+    self.makeVanityPage = function() {
+	var vanityProperties = {};
+
+	function calculateAuthorStats( articleWordCounts ) {
+	    var authorStats = {};
+
+	    function setStats(pair) {
+		authorStats[pair[0]] = {};
+		authorStats[pair[0]].totalWords = authorStats[pair[0]].totalWords + pair[1] || pair[1];
+		authorStats[pair[0]].totalArticles = authorStats[pair[0]].totalArticles + 1 || 1;
+		authorStats[pair[0]].averageWordsPerArticle = authorStats[pair[0]].totalWords / authorStats[pair[0]].totalArticles;
+		return 1;
+	    }
+	    
+	    articleWordCounts.map(setStats);
+	    return authorStats;
+	    
+	}
+	
+	vanityProperties.articleCount = self.articles.length;
+	vanityProperties.authorCount = self.authors.length;
+	vanityProperties.totalWordCount = self.articles
+	    .map( function(article){return article.wordCount;} )
+	    .reduce( function(a,b){return a+b;}, 0 ) ;
+	
+	// I prefer this syntax, but it doesn't have good browser support:
+	//vanityProperties.totalWordCount = self.articles.map( ()=>this.wordCount ).reduce( (a,b)=>a+b, 0 );
+	vanityProperties.averageWordsPerPost = Math.floor( vanityProperties.totalWordCount / vanityProperties.articleCount );
+	
+	var articlesAuthorAndWordCount = self.articles.map( function(article) { return [ article.author, article.wordCount ]; } );
+	console.log(articlesAuthorAndWordCount);
+	vanityProperties.authorStats = calculateAuthorStats( articlesAuthorAndWordCount );
+
+	self.vanityPage = new VanityPage(vanityProperties);
+	console.log(self.vanityPage);
+	
     }
     
 };
