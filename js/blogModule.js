@@ -41,66 +41,58 @@ function Blog() {
     var byAuthor = function(a, b) { return alphabetical( a.author, b.author ) };
     var byAuthorReversed = function(a, b) { return alphabeticalReversed( a.author, b.author ) };
     var byTitle = function(a, b)  { return alphabetical( a.title, b.title ) };
-    var byTitleReversed = function(a, b)  { return alphabeticalReversed( a.title, b.title ) };
-
-    var cantFind = function( element, array ) {
-	for ( var ii=0; ii < array.length; ii++ ) {
-	    if ( element == array[ii] ) {
-		return false;
-	    }
-	}
-	return true;
-    }
-    
+    var byTitleReversed = function(a, b)  { return alphabeticalReversed( a.title, b.title ) };   
     
     this.articles = [ ];
     this.articlesToPublish = [ ];
     this.authors = [ ];
     this.categories = [ ];
-    this.dates = [ ];
     var self = this;
     
     this.init = function() {
-	function processJSON( jsonData ) {
-	    for( var ii=0; ii < jsonData.articles.length; ii++ ) {
-		self.articles.push( new Article( jsonData.articles[ii] ) );
-		if ( cantFind( jsonData.articles[ii].author, self.authors ) ) {
-		    self.authors.push( jsonData.articles[ii].author );
-		}
-		if ( cantFind( jsonData.articles[ii].category, self.categories ) ) {
-		    self.categories.push( jsonData.articles[ii].category );
-		}
-	    }
-	}
 	var blogDataURL = "http://johnthebastard.github.io/code-blog-json/blogArticles.json";
-	var $blogData = $.ajax( { type: "GET",
-				  url: blogDataURL,
-				  async: false,
-				  dataType: "json"
-				} );
-	
-	$blogData.done( processJSON );
-	
-	self.articles.sort(byDate);
-	for( var ii=0; ii < self.articles.length; ii++ ) {
-	    self.dates.push( self.articles[ii].publishedOn );
+	var $blogData;
+
+
+	function processJSON( jsonData ) {
+	    function onlyUnique(value, index, self) { 
+		return self.indexOf(value) === index;
+	    }
+	    
+	    // make Article objects out of the data and store in a sorted array
+	    self.articles = jsonData.articles.map( function(articleData) { return new Article( articleData ); } ).sort(byDate);
+	    // store unique authors and categories in sorted arrays
+	    self.authors = self.articles
+		.map( function(article) { return article.author; } )
+		.filter( onlyUnique )
+	        .sort();
+	    self.categories = self.articles
+		.map( function(article) { return article.category; } )
+	        .filter( onlyUnique )
+	        .sort();
 	}
-	self.authors.sort();
-	self.categories.sort();
-	self.articlesToPublish = self.articles;
 	
+	if( localStorage.getItem("articles") === null ) {
+	    $blogData = $.ajax( { type: "GET", url: blogDataURL, async: false, dataType: "json" } );
+	    $blogData.done( processJSON );
+
+	}
+	
+	self.articlesToPublish = self.articles;
+
+	// Make our navbar menus
 	var $authors = $('#authors ul');
 	var $categories = $('#categories ul');
 	var $dates = $('#dates ul');
-	    
-	for( var ii=0; ii < self.authors.length; ii++ ) {
-	    $authors.append('<li><span class="author">' + self.authors[ii] + '</span></li>' );
-	}
-	for( var ii=0; ii < self.categories.length; ii++ ) {
-	    $categories.append('<li><span class="category">' + self.categories[ii] + '</span></li>' );
-	}
+
+	self.authors.map( function( author ) {
+	    return $authors.append('<li><span class="author">' + author + '</span></li>' );
+	});
+	self.categories.map( function( category ) {
+	    return $categories.append('<li><span class="category">' + category + '</span></li>' );
+	});
     }
-    
+	
     
     
     self.sortBy = function( sortMethod ) {
@@ -116,25 +108,10 @@ function Blog() {
 	    console.log("Error: unable to sort on " + sortMethod );
 	}
 
-	/*
-	if(debug) {
-	    var tempAuthors = [];
-	    for ( var ii=0; ii < this.articlesToPublish.length; ii++ ) {
-		tempAuthors.push(this.articlesToPublish[ii].author);
-	    }
-	    console.log(tempAuthors);
-	}
-	*/
     }
 
-    self.filterBy = function( filter, attribute ) {
-	self.articlesToPublish = [ ];
-	for( var ii=0; ii < self.articles.length; ii++ ) {
-	    if( ( attribute == "author" && filter == self.articles[ii].author ) ||
-		( attribute == "category" && filter == self.articles[ii].category ) ) {
-		self.articlesToPublish.push( self.articles[ii] );
-	    }
-	}
+    self.filterBy = function( selector, attribute ) {
+	self.articlesToPublish = self.articles.filter( function(article) { return selector == article[attribute]; });
     }
     
 };
@@ -148,13 +125,11 @@ var BLOG_MODULE = (function() {
 
     my.publish = function() {
 	$('.articleTemplate').nextAll().remove();
-	for( var ii=0; ii < my.blog.articlesToPublish.length; ii++ ) {
-	    my.$anchor.append( my.blog.articlesToPublish[ii].toHTML() );
-	}
+
+	my.blog.articlesToPublish.map( function(article) { return my.$anchor.append( article.toHTML() ); } );
     }
     my.publish();
 
-    //console.log(JSON.stringify(my.blog.articles));
     
     my.eventListeners = function() {
 	var $resetPublishedArticles = $( '#resetToAllArticles' );
@@ -176,7 +151,6 @@ var BLOG_MODULE = (function() {
 
 	$sortButtons.on('click', function() {
 	    var button = $(this).attr('id');
-	    console.log(button);
 	    my.blog.sortBy(button);
 	    my.publish();
 	});
