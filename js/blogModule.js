@@ -205,7 +205,7 @@ var BLOG_MODULE = (function() {
     my.blog.init();
 
     my.publish = function() {
-	$('.articleTemplate').nextAll().remove();
+	$('#articleTemplate').nextAll().remove();
 
 	my.blog.articlesToPublish.map( function(article) { return my.$anchor.append( article.toHTML() ); } );
     }

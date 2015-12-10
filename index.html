@@ -72,18 +72,18 @@
       <i class="fa fa-sort-numeric-desc"></i>
     </span>
   </div>    
-    <div class="articleTemplate">
+    <script id="articleTemplate" type="text/x-handlebars-template">
       <article>
         <header>
-          <h1>Title</h1>
+          <h1>{{{title}}}</h1>
           <div class="byline">
-            published <time pubdate datetime="1970-01-01">Publish Time</time>
+            published <time pubdate="pubdate" datetime="{{timeStamp}}">{{{relativeDate}}}</time>
           </div>
         </header>
-        <section class="article-body">Body</section>
+        <section class="article-body">{{{body}}}</section>
       </article>
       <hr>
-    </div>
+    </script>
   </section>
 
 <footer>
