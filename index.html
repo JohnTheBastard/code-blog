@@ -47,8 +47,8 @@
           <ul>
 	    <li><a href="#">
 	    <i class="fa fa-code fa-fw"></i> new post</a></li>
-	    <li><a href="#">
-	    <i class="fa fa-bar-chart fa-fw"></i> statistics</a></li>
+	    <li id="vanityStatsNavElement"><span>
+	    <i class="fa fa-bar-chart fa-fw"></i> statistics</span></li>
           </ul>
       </ul>
 
@@ -86,6 +86,14 @@
     </script>
   </section>
 
+  <section id="adminTools" >
+    <script id="vanityStatsTemplate" type="text/x-handlebars-template">
+      <h1>{{{title}}}</h1>
+	<div> class="vanityStatsBox">
+	  
+	</div>
+    </script>
+  </section>
 <footer>
 <p>&copy; 2015 <code><a href="http://twitter.com/JohnTheBastard">@JohnTheBastard</a></code></p>
 </footer>

@@ -205,6 +205,8 @@ var BLOG_MODULE = (function() {
     my.blog.init();
 
     my.publish = function() {
+	$('#adminTools').css('display', 'none');
+	$('#articles').css('display', 'block');
 	$('#articleTemplate').nextAll().remove();
 
 	my.blog.articlesToPublish.map( function(article) { return my.$anchor.append( article.toHTML() ); } );
@@ -213,6 +215,7 @@ var BLOG_MODULE = (function() {
 
     
     my.eventListeners = function() {
+	var $vanityStats = $('#vanityStatsNavElement');
 	var $resetPublishedArticles = $( '#resetToAllArticles' );
 	var $filters = $( '#blogNav > ul > li > ul > li' );
 	var $sortButtons = $( '.btn-group > span' );
@@ -235,6 +238,15 @@ var BLOG_MODULE = (function() {
 	    my.blog.sortBy(button);
 	    my.publish();
 	});
+
+	$vanityStats.on('click', function() {
+	    $('#articles').css('display', 'none');
+	    $('#adminTools').css('display', 'block');
+	    my.blog.makeVanityPage();
+	    my.$anchor.append( my.blog.vanityPage.toHTML() );
+	    
+	});
+	
     }			
     my.eventListeners();
     
